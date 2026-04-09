@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,17 +25,16 @@ import androidx.compose.ui.unit.sp
 import ni.edu.uam.uamrideshare.ui.theme.*
 
 /**
- * Actividad de Registro que utiliza el tema global del proyecto.
+ * Pantalla de Registro
  */
 class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Usamos UAMRideShareTheme para mantener la consistencia con el resto de la app
             UAMRideShareTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = IcyBlue // Fondo limpio usando la paleta oficial
+                    color = porcelain // Fondo base de la paleta
                 ) {
                     RegistroScreen()
                 }
@@ -45,138 +45,137 @@ class RegisterActivity : ComponentActivity() {
 
 @Composable
 fun RegistroScreen() {
-    // --- ESTADO (Variables reactivas para los campos de entrada) ---
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var carnet by remember { mutableStateOf("") }
     var contra by remember { mutableStateOf("") }
     var confirmarContra by remember { mutableStateOf("") }
-
-    // Estado para manejar el feedback visual al usuario
     var mensajeFeedback by remember { mutableStateOf("") }
     
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Logo UAM (Consistencia visual)
+        // --- CABECERA ---
+        Spacer(modifier = Modifier.height(60.dp))
+        
+        // Imagen del logo
         Image(
             painter = painterResource(id = R.drawable.uamlogo),
-            contentDescription = "Logo de la UAM",
-            modifier = Modifier
-                .size(100.dp)
-                .padding(bottom = 16.dp)
+            contentDescription = "Logo UAM",
+            modifier = Modifier.size(140.dp)
         )
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Registro UAM RideShare",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+            text = "UAM RideShare",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.ExtraBold,
             color = Color.Black
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // --- CAMPOS DE TEXTO (Usando OutlinedTextField para coincidir con el estilo de ProfileScreen) ---
-
-        CustomRegisterField(
-            value = nombre, 
-            onValueChange = { nombre = it }, 
-            label = "Nombre Completo"
-        )
-        
-        Spacer(modifier = Modifier.height(12.dp))
-
-        CustomRegisterField(
-            value = correo, 
-            onValueChange = { correo = it }, 
-            label = "Correo Institucional (@uam.edu.ni)"
+        Text(
+            text = "Crea tu cuenta universitaria",
+            fontSize = 14.sp,
+            color = stormyteal.copy(alpha = 0.8f) // Uso de stormyteal para sutileza
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-        CustomRegisterField(
-            value = carnet, 
-            onValueChange = { carnet = it }, 
-            label = "Número de Carnet"
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        CustomRegisterField(
-            value = contra, 
-            onValueChange = { contra = it }, 
-            label = "Contraseña", 
-            isPassword = true
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        CustomRegisterField(
-            value = confirmarContra, 
-            onValueChange = { confirmarContra = it }, 
-            label = "Confirmar Contraseña", 
-            isPassword = true
-        )
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        // --- BOTÓN REGISTRAR (Estilo alineado con ProfileScreen: SkyBlue con texto negro) ---
-        Button(
-            onClick = {
-                // Validación básica de campos
-                if (nombre.isEmpty() || correo.isEmpty() || carnet.isEmpty() || contra.isEmpty()) {
-                    mensajeFeedback = "⚠️ Error: Todos los campos son obligatorios."
-                } else if (!correo.endsWith("@uam.edu.ni")) {
-                    mensajeFeedback = "⚠️ Error: Solo correos @uam.edu.ni permitidos."
-                } else if (contra != confirmarContra) {
-                    mensajeFeedback = "⚠️ Error: Las contraseñas no coinciden."
-                } else {
-                    mensajeFeedback = "✅ Registro simulado exitoso"
-                    Toast.makeText(context, "¡Bienvenido a UAM RideShare!", Toast.LENGTH_LONG).show()
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = SkyBlue),
-            shape = RoundedCornerShape(12.dp)
+        // --- FORMULARIO ---
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color.White,
+            shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
+            shadowElevation = 8.dp
         ) {
-            Text("Registrarse", fontSize = 18.sp, color = Color.Black, fontWeight = FontWeight.Bold)
-        }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Datos de Registro",
+                    modifier = Modifier.fillMaxWidth(),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.Black
+                )
+                
+                Spacer(modifier = Modifier.height(20.dp))
 
-        // --- FEEDBACK VISUAL ---
-        if (mensajeFeedback.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = mensajeFeedback,
-                color = if (mensajeFeedback.contains("✅")) Color(0xFF2E7D32) else Color.Red,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
+                CustomRegisterField(nombre, { nombre = it }, "Nombre Completo")
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                CustomRegisterField(correo, { correo = it }, "Correo Institucional")
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                CustomRegisterField(carnet, { carnet = it }, "Número de Carnet")
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                CustomRegisterField(contra, { contra = it }, "Contraseña", isPassword = true)
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                CustomRegisterField(confirmarContra, { confirmarContra = it }, "Confirmar Contraseña", isPassword = true)
 
-        Spacer(modifier = Modifier.height(20.dp))
+                // Feedback visual
+                if (mensajeFeedback.isNotEmpty()) {
+                    Text(
+                        text = mensajeFeedback,
+                        color = if (mensajeFeedback.contains("✅")) Color(0xFF388E3C) else Color.Red,
+                        fontSize = 13.sp,
+                        modifier = Modifier.padding(top = 16.dp),
+                        fontWeight = FontWeight.Medium
+                    )
+                }
 
-        // Enlace para ir al login (estilizado)
-        TextButton(onClick = { /* Lógica de navegación */ }) {
-            Text(
-                text = "¿Ya tienes cuenta? Inicia sesión",
-                color = Color.DarkGray,
-                fontWeight = FontWeight.Bold
-            )
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Botón de Registro con color 'teal' (Acento principal)
+                Button(
+                    onClick = {
+                        if (nombre.isEmpty() || correo.isEmpty() || carnet.isEmpty() || contra.isEmpty()) {
+                            mensajeFeedback = "⚠️ Todos los campos son obligatorios"
+                        } else if (!correo.endsWith("@uam.edu.ni")) {
+                            mensajeFeedback = "⚠️ Usa tu correo @uam.edu.ni"
+                        } else if (contra != confirmarContra) {
+                            mensajeFeedback = "⚠️ Las contraseñas no coinciden"
+                        } else {
+                            mensajeFeedback = "✅ ¡Registro exitoso!"
+                            Toast.makeText(context, "Bienvenido a UAM RideShare", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = teal),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text("REGISTRARME", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.White)
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Link para Iniciar Sesión con 'stormyteal'
+                TextButton(onClick = { /* Lógica de navegación */ }) {
+                    Row {
+                        Text("¿Ya tienes cuenta? ", color = Color.Gray)
+                        Text("Inicia Sesión", color = stormyteal, fontWeight = FontWeight.Bold)
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
 
 /**
- * Campo de texto personalizado para el registro.
- * Mantiene la consistencia visual utilizando OutlinedTextField y colores de la paleta.
+ * Campo de texto personalizado adaptado a la nueva paleta.
  */
 @Composable
 fun CustomRegisterField(
@@ -188,16 +187,16 @@ fun CustomRegisterField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = { Text(label, fontSize = 14.sp) },
         modifier = Modifier.fillMaxWidth(),
         visualTransformation = if (isPassword) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
         singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = BabyPink, // Color de acento de la paleta
-            unfocusedBorderColor = Color.LightGray,
-            focusedLabelColor = BabyPink,
-            focusedContainerColor = Color.White.copy(alpha = 0.5f),
-            unfocusedContainerColor = Color.White.copy(alpha = 0.5f)
+            focusedBorderColor = teal,
+            unfocusedBorderColor = pearlaqua,
+            focusedLabelColor = teal,
+            focusedContainerColor = tropicalteal.copy(alpha = 0.05f),
+            unfocusedContainerColor = Color.Transparent
         ),
         shape = RoundedCornerShape(12.dp)
     )

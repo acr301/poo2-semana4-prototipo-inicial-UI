@@ -3,8 +3,8 @@ package ni.edu.uam.uamrideshare.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Paleta de colores
-val Thistle = Color(0xFFCDB4DB)
-val PastelPetal = Color(0xFFFFC8DD)
-val BabyPink = Color(0xFFFFAFCC)
-val IcyBlue = Color(0xFFBDE0FE)
-val SkyBlue = Color(0xFFA2D2FF)
+val porcelain   = Color(0xfffffffa)
+val stormyteal  = Color(0xff0d5c63)
+val tropicalteal = Color(0xff44a1a0)
+val pearlaqua   = Color(0xff78cdd7)
+val teal        = Color(0xff247b7b)
