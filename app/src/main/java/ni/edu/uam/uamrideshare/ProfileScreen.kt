@@ -28,15 +28,17 @@ import ni.edu.uam.uamrideshare.ui.theme.*
 /**
  * Pantalla principal de Perfil del Estudiante.
  * Utiliza un Scaffold para la estructura base y una LazyColumn para el contenido scrolleable.
+ * 
+ * @param onLogout Callback para regresar a la pantalla de registro/login.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StudentProfileScreen() {
+fun StudentProfileScreen(onLogout: () -> Unit) {
     // Datos de prueba (Mock Data) para representar a un usuario en la UI
     val mockUser = UserProfile(
-        username = "juan.perez",
-        email = "juan.perez@universidad.edu",
-        cif = "20241234",
+        username = "an.fa",
+        email = "anfa@uamv.edu.ni",
+        cif = "20123456",
         roles = setOf(Role.DRIVER, Role.PASSENGER),
         vehiclePlate = "ABC-1234",
         preferredPaymentMethod = "Tarjeta",
@@ -139,7 +141,7 @@ fun StudentProfileScreen() {
                 }
 
                 TextButton(
-                    onClick = { /* Lógica logout */ },
+                    onClick = { onLogout() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Cerrar Sesión", color = Color.Red.copy(alpha = 0.7f))
@@ -272,5 +274,5 @@ fun RoleDetailItem(roleName: String, label: String, value: String, color: Color)
 @Preview(showBackground = true)
 @Composable
 fun StudentProfileScreenPreview() {
-    StudentProfileScreen()
+    StudentProfileScreen(onLogout = {})
 }

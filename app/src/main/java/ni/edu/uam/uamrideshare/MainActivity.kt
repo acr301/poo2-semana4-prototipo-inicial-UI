@@ -4,13 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
 import ni.edu.uam.uamrideshare.ui.theme.UAMRideShareTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +13,27 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             UAMRideShareTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                UAMRideShareApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun UAMRideShareApp() {
+    // Estado de navegación simple para el prototipo
+    var currentScreen by remember { mutableStateOf("register") }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    UAMRideShareTheme {
-        Greeting("Android")
+    when (currentScreen) {
+        "register" -> {
+            RegistroScreen(onNavigateToProfile = { 
+                currentScreen = "profile" 
+            })
+        }
+        "profile" -> {
+            StudentProfileScreen(onLogout = { 
+                currentScreen = "register" 
+            })
+        }
     }
 }

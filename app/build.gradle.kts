@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "ni.edu.uam.uamrideshare"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "ni.edu.uam.uamrideshare"
@@ -32,6 +33,9 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 

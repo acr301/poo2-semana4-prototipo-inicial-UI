@@ -36,7 +36,7 @@ class RegisterActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = porcelain // Fondo base de la paleta
                 ) {
-                    RegistroScreen()
+                    RegistroScreen(onNavigateToProfile = {})
                 }
             }
         }
@@ -44,7 +44,7 @@ class RegisterActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegistroScreen() {
+fun RegistroScreen(onNavigateToProfile: () -> Unit) {
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var carnet by remember { mutableStateOf("") }
@@ -140,13 +140,14 @@ fun RegistroScreen() {
                     onClick = {
                         if (nombre.isEmpty() || correo.isEmpty() || carnet.isEmpty() || contra.isEmpty()) {
                             mensajeFeedback = "⚠️ Todos los campos son obligatorios"
-                        } else if (!correo.endsWith("@uam.edu.ni")) {
-                            mensajeFeedback = "⚠️ Usa tu correo @uam.edu.ni"
+                        } else if (!correo.endsWith("@uamv.edu.ni")) {
+                            mensajeFeedback = "⚠️ Usa tu correo @uamv.edu.ni"
                         } else if (contra != confirmarContra) {
                             mensajeFeedback = "⚠️ Las contraseñas no coinciden"
                         } else {
                             mensajeFeedback = "✅ ¡Registro exitoso!"
                             Toast.makeText(context, "Bienvenido a UAM RideShare", Toast.LENGTH_SHORT).show()
+                            onNavigateToProfile() // Navegar al perfil tras éxito
                         }
                     },
                     modifier = Modifier
@@ -161,7 +162,7 @@ fun RegistroScreen() {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // Link para Iniciar Sesión con 'stormyteal'
-                TextButton(onClick = { /* Lógica de navegación */ }) {
+                TextButton(onClick = { onNavigateToProfile() }) {
                     Row {
                         Text("¿Ya tienes cuenta? ", color = Color.Gray)
                         Text("Inicia Sesión", color = stormyteal, fontWeight = FontWeight.Bold)
@@ -206,6 +207,6 @@ fun CustomRegisterField(
 @Composable
 fun RegistroScreenPreview() {
     UAMRideShareTheme {
-        RegistroScreen()
+        RegistroScreen(onNavigateToProfile = {})
     }
 }
