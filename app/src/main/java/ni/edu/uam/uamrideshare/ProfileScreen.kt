@@ -1,6 +1,6 @@
 package ni.edu.uam.uamrideshare
 
-import androidx.compose.animation.core.copy
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,21 +10,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ni.edu.uam.uamrideshare.model.Role
+import ni.edu.uam.uamrideshare.model.UserProfile
+import ni.edu.uam.uamrideshare.model.UserStats
+import ni.edu.uam.uamrideshare.ui.theme.*
 
+/**
+ * Pantalla principal de Perfil del Estudiante.
+ * Utiliza un Scaffold para la estructura base y una LazyColumn para el contenido scrolleable.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentProfileScreen() {
-    // Mock Data
+    // Datos de prueba (Mock Data) para representar a un usuario en la UI
     val mockUser = UserProfile(
         username = "juan.perez",
         email = "juan.perez@universidad.edu",
@@ -37,12 +45,15 @@ fun StudentProfileScreen() {
     )
 
     Scaffold(
+        containerColor = IcyBlue, // Fondo general de la pantalla (Paleta: Icy Blue)
         topBar = {
+            // Barra superior con el título y contador de notificaciones
             CenterAlignedTopAppBar(
                 title = { Text("Mi Perfil", fontWeight = FontWeight.Bold) },
                 actions = {
                     BadgedBox(
                         badge = {
+                            // Badge con color Baby Pink según paleta
                             Badge(containerColor = BabyPink) {
                                 Text(mockUser.unreadNotifications.toString(), color = Color.White)
                             }
@@ -52,7 +63,9 @@ fun StudentProfileScreen() {
                         Icon(Icons.Default.Notifications, contentDescription = "Notificaciones")
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = IcyBlue)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent // Permite ver el IcyBlue del Scaffold
+                )
             )
         }
     ) { paddingValues ->
@@ -60,11 +73,12 @@ fun StudentProfileScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color.White),
+                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .background(Color.White), // Cuerpo principal en blanco para contraste
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(24.dp)
         ) {
-            // 1. Avatar Seccion
+            // 1. Cabecera con Avatar (Usa PastelPetal para las iniciales)
             item {
                 ProfileAvatar(username = mockUser.username)
                 Spacer(modifier = Modifier.height(16.dp))
@@ -73,21 +87,21 @@ fun StudentProfileScreen() {
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // 2. Estadísticas
+            // 2. Sección de Estadísticas con fondo Icy Blue suave
             item {
                 StatsSection(mockUser.stats)
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // 3. Información Personal (CIF)
+            // 3. Tarjeta de Información Estudiantil
             item {
-                InfoCard(title = "Información Estudiantil", icon = Icons.Default.School) {
+                InfoCard(title = "Información Estudiantil", icon = Icons.Default.Person) {
                     InfoRow(label = "CIF", value = mockUser.cif)
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // 4. Roles y Detalles
+            // 4. Configuración de Roles (Usa Thistle para elementos secundarios como el rol Pasajero)
             item {
                 InfoCard(title = "Roles y Configuración", icon = Icons.Default.Settings) {
                     if (mockUser.roles.contains(Role.DRIVER)) {
@@ -95,23 +109,23 @@ fun StudentProfileScreen() {
                             roleName = "CONDUCTOR",
                             label = "Placa del Vehículo",
                             value = mockUser.vehiclePlate ?: "No registrada",
-                            color = SkyBlue
+                            color = SkyBlue // Color Sky Blue para conductor
                         )
                     }
                     if (mockUser.roles.contains(Role.PASSENGER)) {
-                        Spacer(modifier = Modifier.height(12.dp))
+                        if (mockUser.roles.contains(Role.DRIVER)) Spacer(modifier = Modifier.height(12.dp))
                         RoleDetailItem(
                             roleName = "PASAJERO",
                             label = "Método de Pago",
                             value = mockUser.preferredPaymentMethod ?: "Efectivo",
-                            color = Thistle
+                            color = Thistle // Color Thistle para pasajero (secundario)
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(32.dp))
             }
 
-            // 5. Botones de Acción
+            // 5. Botones de Acción (Paleta: Sky Blue para el principal)
             item {
                 Button(
                     onClick = { /* Lógica editar */ },
@@ -119,7 +133,7 @@ fun StudentProfileScreen() {
                     colors = ButtonDefaults.buttonColors(containerColor = SkyBlue),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Icon(Icons.Default.Edit, contentDescription = null)
+                    Icon(Icons.Default.Edit, contentDescription = null, tint = Color.Black)
                     Spacer(Modifier.width(8.dp))
                     Text("Editar Perfil", color = Color.Black)
                 }
@@ -135,6 +149,9 @@ fun StudentProfileScreen() {
     }
 }
 
+/**
+ * Componente circular para mostrar las iniciales del usuario.
+ */
 @Composable
 fun ProfileAvatar(username: String) {
     val initials = username.take(2).uppercase()
@@ -154,13 +171,16 @@ fun ProfileAvatar(username: String) {
     }
 }
 
+/**
+ * Muestra métricas rápidas del usuario con un diseño horizontal.
+ */
 @Composable
 fun StatsSection(stats: UserStats) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(IcyBlue.copy(alpha = 0.4f))
+            .background(IcyBlue.copy(alpha = 0.4f)) // Fondo Icy Blue suave
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -178,8 +198,11 @@ fun StatItem(label: String, value: String) {
     }
 }
 
+/**
+ * Tarjeta genérica con icono y título para agrupar información.
+ */
 @Composable
-fun InfoCard(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector, content: @Composable () -> Unit) {
+fun InfoCard(title: String, icon: ImageVector, content: @Composable () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(icon, contentDescription = null, tint = SkyBlue, modifier = Modifier.size(20.dp))
@@ -190,7 +213,7 @@ fun InfoCard(title: String, icon: androidx.compose.ui.graphics.vector.ImageVecto
             modifier = Modifier.padding(top = 8.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA)),
             shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, IcyBlue)
+            border = BorderStroke(1.dp, IcyBlue)
         ) {
             Column(modifier = Modifier
                 .padding(16.dp)
@@ -209,6 +232,9 @@ fun InfoRow(label: String, value: String) {
     }
 }
 
+/**
+ * Campo de texto personalizado que usa la paleta de colores cuando está enfocado.
+ */
 @Composable
 fun RoleDetailItem(roleName: String, label: String, value: String, color: Color) {
     var textValue by remember { mutableStateOf(value) }
@@ -232,12 +258,19 @@ fun RoleDetailItem(roleName: String, label: String, value: String, color: Color)
             onValueChange = { textValue = it },
             label = { Text(label) },
             modifier = Modifier.fillMaxWidth(),
-            textStyle = androidx.compose.ui.text.TextStyle(fontSize = 14.sp),
+            textStyle = TextStyle(fontSize = 14.sp),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = color,
-                unfocusedBorderColor = Color.LightGray
+                focusedBorderColor = BabyPink, // Color Baby Pink al enfocar
+                unfocusedBorderColor = Color.LightGray,
+                focusedLabelColor = BabyPink
             )
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StudentProfileScreenPreview() {
+    StudentProfileScreen()
 }
