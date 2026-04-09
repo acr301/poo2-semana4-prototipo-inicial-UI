@@ -45,7 +45,7 @@ fun StudentProfileScreen() {
     )
 
     Scaffold(
-        containerColor = IcyBlue, // Fondo general de la pantalla (Paleta: Icy Blue)
+        containerColor = porcelain, // Fondo general de la pantalla (Paleta: Porcelain)
         topBar = {
             // Barra superior con el título y contador de notificaciones
             CenterAlignedTopAppBar(
@@ -53,8 +53,8 @@ fun StudentProfileScreen() {
                 actions = {
                     BadgedBox(
                         badge = {
-                            // Badge con color Baby Pink según paleta
-                            Badge(containerColor = BabyPink) {
+                            // Badge con color Stormy Teal según paleta
+                            Badge(containerColor = stormyteal) {
                                 Text(mockUser.unreadNotifications.toString(), color = Color.White)
                             }
                         },
@@ -64,7 +64,7 @@ fun StudentProfileScreen() {
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent // Permite ver el IcyBlue del Scaffold
+                    containerColor = Color.Transparent // Permite ver el Porcelain del Scaffold
                 )
             )
         }
@@ -78,7 +78,7 @@ fun StudentProfileScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(24.dp)
         ) {
-            // 1. Cabecera con Avatar (Usa PastelPetal para las iniciales)
+            // 1. Cabecera con Avatar (Usa Pearlaqua para las iniciales)
             item {
                 ProfileAvatar(username = mockUser.username)
                 Spacer(modifier = Modifier.height(16.dp))
@@ -87,7 +87,7 @@ fun StudentProfileScreen() {
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // 2. Sección de Estadísticas con fondo Icy Blue suave
+            // 2. Sección de Estadísticas con fondo Pearlaqua suave
             item {
                 StatsSection(mockUser.stats)
                 Spacer(modifier = Modifier.height(24.dp))
@@ -101,7 +101,7 @@ fun StudentProfileScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // 4. Configuración de Roles (Usa Thistle para elementos secundarios como el rol Pasajero)
+            // 4. Configuración de Roles (Usa Tropicalteal para elementos secundarios como el rol Pasajero)
             item {
                 InfoCard(title = "Roles y Configuración", icon = Icons.Default.Settings) {
                     if (mockUser.roles.contains(Role.DRIVER)) {
@@ -109,7 +109,7 @@ fun StudentProfileScreen() {
                             roleName = "CONDUCTOR",
                             label = "Placa del Vehículo",
                             value = mockUser.vehiclePlate ?: "No registrada",
-                            color = SkyBlue // Color Sky Blue para conductor
+                            color = teal // Color teal para conductor
                         )
                     }
                     if (mockUser.roles.contains(Role.PASSENGER)) {
@@ -118,24 +118,24 @@ fun StudentProfileScreen() {
                             roleName = "PASAJERO",
                             label = "Método de Pago",
                             value = mockUser.preferredPaymentMethod ?: "Efectivo",
-                            color = Thistle // Color Thistle para pasajero (secundario)
+                            color = tropicalteal // Color tropicalteal para pasajero (secundario)
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(32.dp))
             }
 
-            // 5. Botones de Acción (Paleta: Sky Blue para el principal)
+            // 5. Botones de Acción (Paleta: Teal para el principal)
             item {
                 Button(
                     onClick = { /* Lógica editar */ },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = SkyBlue),
+                    colors = ButtonDefaults.buttonColors(containerColor = teal),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Icon(Icons.Default.Edit, contentDescription = null, tint = Color.Black)
+                    Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White)
                     Spacer(Modifier.width(8.dp))
-                    Text("Editar Perfil", color = Color.Black)
+                    Text("Editar Perfil", color = Color.White)
                 }
 
                 TextButton(
@@ -159,7 +159,7 @@ fun ProfileAvatar(username: String) {
         modifier = Modifier
             .size(100.dp)
             .clip(CircleShape)
-            .background(PastelPetal),
+            .background(pearlaqua),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -180,7 +180,7 @@ fun StatsSection(stats: UserStats) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(IcyBlue.copy(alpha = 0.4f)) // Fondo Icy Blue suave
+            .background(pearlaqua.copy(alpha = 0.2f)) // Fondo Pearlaqua suave
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -205,7 +205,7 @@ fun StatItem(label: String, value: String) {
 fun InfoCard(title: String, icon: ImageVector, content: @Composable () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, contentDescription = null, tint = SkyBlue, modifier = Modifier.size(20.dp))
+            Icon(icon, contentDescription = null, tint = teal, modifier = Modifier.size(20.dp))
             Spacer(Modifier.width(8.dp))
             Text(text = title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
         }
@@ -213,7 +213,7 @@ fun InfoCard(title: String, icon: ImageVector, content: @Composable () -> Unit) 
             modifier = Modifier.padding(top = 8.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA)),
             shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, IcyBlue)
+            border = BorderStroke(1.dp, pearlaqua)
         ) {
             Column(modifier = Modifier
                 .padding(16.dp)
@@ -250,7 +250,7 @@ fun RoleDetailItem(roleName: String, label: String, value: String, color: Color)
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray
+                color = Color.White
             )
         }
         OutlinedTextField(
@@ -261,9 +261,9 @@ fun RoleDetailItem(roleName: String, label: String, value: String, color: Color)
             textStyle = TextStyle(fontSize = 14.sp),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = BabyPink, // Color Baby Pink al enfocar
+                focusedBorderColor = stormyteal, // Color Stormy Teal al enfocar
                 unfocusedBorderColor = Color.LightGray,
-                focusedLabelColor = BabyPink
+                focusedLabelColor = stormyteal
             )
         )
     }
